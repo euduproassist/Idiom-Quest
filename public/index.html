@@ -21,6 +21,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* Screen container locked to portrait aspect ratios & centering */
         .screen-container {
             position: relative;
             width: 100%;
@@ -31,6 +32,7 @@
             background-color: #000;
         }
 
+        /* Enforce full asset visibility without cropping (object-fit: contain) */
         .game-canvas {
             position: absolute;
             width: 100%;
@@ -47,10 +49,12 @@
             pointer-events: auto;
         }
 
+        /* Logo screen specific background styling */
         #logo-screen {
             background-color: #000000;
         }
 
+        /* Loading UI Overlays matching exact visual placement */
         .loading-ui-layer {
             position: absolute;
             width: 100%;
@@ -59,7 +63,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
-            padding-bottom: 22%;
+            padding-bottom: 22%; /* Positioned precisely over the water/dock area */
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease-in-out;
@@ -102,6 +106,7 @@
             margin-top: 10px;
         }
 
+        /* Interactive Menu Overlay elements for buttons */
         .menu-ui-layer {
             position: absolute;
             width: 100%;
@@ -121,13 +126,14 @@
             pointer-events: auto;
         }
 
+        /* Transparent interactive zones matching visual layout positions */
         .play-hitbox {
             position: absolute;
             width: 44%;
             max-width: 270px;
             height: 8%;
             max-height: 65px;
-            top: 55%;
+            top: 55%; /* Matches button location on menu graphic */
             left: 50%;
             transform: translateX(-50%);
             cursor: pointer;
@@ -153,12 +159,13 @@
 <body>
 
     <div class="screen-container" id="appContainer">
-        <!-- 1st Photo -->
-        <img src="assets/logo.png" alt="Logo" class="game-canvas active" id="screenLogo">
+        <!-- 1st Photo: Logo Screen -->
+        <img src="../assets/logo.png" alt="Napo Studios Logo" class="game-canvas active" id="screenLogo">
 
-        <!-- 2nd Photo -->
-        <img src="assets/loading_bg.png" alt="Loading Background" class="game-canvas" id="screenLoadingBg">
+        <!-- 2nd Photo: Loading Screen Background -->
+        <img src="../assets/loading_bg.png" alt="Loading Background" class="game-canvas" id="screenLoadingBg">
         
+        <!-- Loading UI Elements (Percentage, Loading text, Progress bar) -->
         <div class="loading-ui-layer" id="loadingUi">
             <div class="loading-text" id="loadingText">Loading...</div>
             <div class="progress-bar-track">
@@ -167,8 +174,8 @@
             <div class="percentage-text" id="percentageText">0%</div>
         </div>
 
-        <!-- 3rd Photo -->
-        <img src="assets/menu_bg.png" alt="Menu Background" class="game-canvas" id="screenMenuBg">
+        <!-- 3rd Photo: Menu Screen Background & Interactive Layer -->
+        <img src="../assets/menu_bg.png" alt="Menu Background" class="game-canvas" id="screenMenuBg">
         
         <div class="menu-ui-layer" id="menuUi">
             <div class="play-hitbox" onclick="handleMenuAction('play')"></div>
@@ -181,9 +188,12 @@
     </div>
 
     <script>
+        // Force and lock orientation to portrait where supported
         function lockPortraitOrientation() {
             if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(() => {});
+                screen.orientation.lock('portrait').catch(() => {
+                    // Fallback handled via CSS aspect containers if browser blocks lock
+                });
             }
         }
 
@@ -193,6 +203,7 @@
         });
 
         function startSequence() {
+            // Step 1: Logo is displayed first for exactly 3 seconds
             setTimeout(() => {
                 transitionToLoadingScreen();
             }, 3000);
@@ -203,6 +214,7 @@
             const loadingBg = document.getElementById('screenLoadingBg');
             const loadingUi = document.getElementById('loadingUi');
 
+            // Smooth crossfade switch
             logoScreen.classList.remove('active');
             loadingBg.classList.add('active');
             loadingUi.classList.add('active');
@@ -216,12 +228,14 @@
             const percentageElement = document.getElementById('percentageText');
             const textElement = document.getElementById('loadingText');
 
+            // Loading text animation configuration ("loading." -> "loading.." -> "loading...")
             let dotCounter = 0;
             const textInterval = setInterval(() => {
                 dotCounter = (dotCounter % 3) + 1;
                 textElement.textContent = "Loading" + ".".repeat(dotCounter);
             }, 400);
 
+            // Progress counter simulation spanning ~2.5 seconds for a smooth game feel
             const totalDuration = 2500; 
             const intervalStep = 25;
             const incrementAmount = 100 / (totalDuration / intervalStep);
@@ -233,6 +247,7 @@
                     clearInterval(progressInterval);
                     clearInterval(textInterval);
                     
+                    // Brief pause at 100% before transitioning smoothly to the menu
                     setTimeout(transitionToMenuScreen, 350);
                 }
 
@@ -248,6 +263,7 @@
             const menuBg = document.getElementById('screenMenuBg');
             const menuUi = document.getElementById('menuUi');
 
+            // Fade out loading assets, fade in final menu assets seamlessly
             loadingBg.classList.remove('active');
             loadingUi.classList.remove('active');
 
@@ -255,8 +271,10 @@
             menuUi.classList.add('active');
         }
 
+        // Placeholder handler for menu button actions
         function handleMenuAction(actionType) {
             console.log("Menu action triggered:", actionType);
+            // Implement subsequent game state transitions or routing here
         }
     </script>
 </body>
