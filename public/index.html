@@ -211,6 +211,65 @@
             display: none; /* Safari/Chrome */
         }
 
+        /* --- Section Divider Header Styles --- */
+        .section-header-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 22px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #0b2545;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .section-divider-graphic {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            max-width: 280px;
+            color: #0b2545;
+        }
+
+        .divider-line {
+            flex-grow: 1;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #0b2545);
+        }
+
+        .divider-line.right {
+            background: linear-gradient(90deg, #0b2545, transparent);
+        }
+
+        .divider-diamonds {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0 10px;
+        }
+
+        .diamond-sm {
+            width: 5px;
+            height: 5px;
+            background-color: #0b2545;
+            transform: rotate(45deg);
+        }
+
+        .diamond-lg {
+            width: 9px;
+            height: 9px;
+            background-color: #0b2545;
+            transform: rotate(45deg);
+        }
+
         .pass-card {
             background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(10px);
@@ -328,7 +387,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 15px rgba(11, 37, 69, 0.08);
-            margin-top: 4px;
+            margin-top: 14px;
         }
 
         .banner-item {
@@ -385,6 +444,20 @@
             <div class="store-close-btn" onclick="closeStore()">✕</div>
 
             <div class="store-scroll-area">
+                <!-- COINS SECTION TITLE -->
+                <div class="section-header-container" style="margin-top: 4px;">
+                    <div class="section-title">COINS</div>
+                    <div class="section-divider-graphic">
+                        <div class="divider-line"></div>
+                        <div class="divider-diamonds">
+                            <div class="diamond-sm"></div>
+                            <div class="diamond-lg"></div>
+                            <div class="diamond-sm"></div>
+                        </div>
+                        <div class="divider-line right"></div>
+                    </div>
+                </div>
+
                 <!-- Small Coin Pack -->
                 <div class="pass-card">
                     <div class="pass-left">
@@ -487,20 +560,17 @@
                     </div>
                 </div>
 
-                <!-- Remove Ads Forever -->
-                <div class="pass-card">
-                    <div class="pass-left">
-                        <div class="pass-icon-box" style="border: none; background: transparent;"><img src="../assets/remove_ads.png" alt="Remove Ads"></div>
-                        <div class="pass-info">
-                            <h3>Remove ads forever</h3>
-                            <div class="pass-perks">
-                                <div class="perk-item"><span>✓</span> Ad-free experience</div>
-                            </div>
+                <!-- PASSES SECTION TITLE -->
+                <div class="section-header-container">
+                    <div class="section-title">PASSES</div>
+                    <div class="section-divider-graphic">
+                        <div class="divider-line"></div>
+                        <div class="divider-diamonds">
+                            <div class="diamond-sm"></div>
+                            <div class="diamond-lg"></div>
+                            <div class="diamond-sm"></div>
                         </div>
-                    </div>
-                    <div class="pass-right">
-                        <div class="pass-price">R599.99</div>
-                        <button class="buy-btn" onclick="handleBuy('Remove ads forever')">BUY</button>
+                        <div class="divider-line right"></div>
                     </div>
                 </div>
 
@@ -581,6 +651,37 @@
                         <div class="pass-price">R1,499.99</div>
                         <div class="pass-total">TOTAL<br>Daily rewards<br>forever</div>
                         <button class="buy-btn" onclick="handleBuy('Lifetime Pass')">BUY</button>
+                    </div>
+                </div>
+
+                <!-- ADS SECTION TITLE -->
+                <div class="section-header-container">
+                    <div class="section-title">ADS</div>
+                    <div class="section-divider-graphic">
+                        <div class="divider-line"></div>
+                        <div class="divider-diamonds">
+                            <div class="diamond-sm"></div>
+                            <div class="diamond-lg"></div>
+                            <div class="diamond-sm"></div>
+                        </div>
+                        <div class="divider-line right"></div>
+                    </div>
+                </div>
+
+                <!-- Remove Ads Forever -->
+                <div class="pass-card">
+                    <div class="pass-left">
+                        <div class="pass-icon-box" style="border: none; background: transparent;"><img src="../assets/remove_ads.png" alt="Remove Ads"></div>
+                        <div class="pass-info">
+                            <h3>Remove ads forever</h3>
+                            <div class="pass-perks">
+                                <div class="perk-item"><span>✓</span> Ad-free experience</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="pass-price">R599.99</div>
+                        <button class="buy-btn" onclick="handleBuy('Remove ads forever')">BUY</button>
                     </div>
                 </div>
 
