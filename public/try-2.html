@@ -19,6 +19,9 @@
             overflow: hidden;
             background-color: #000000;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Extra safeguard against auto-rotation behaviors on mobile wrappers */
+            position: fixed;
+            touch-action: none;
         }
 
         /* Screen container locked to portrait aspect ratios & centering */
@@ -188,18 +191,21 @@
     </div>
 
     <script>
-        // Force and lock orientation to portrait where supported
+        // Force and lock orientation to portrait where supported permanently
         function lockPortraitOrientation() {
             if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(() => {
-                    // Fallback handled via CSS aspect containers if browser blocks lock
-                });
+                screen.orientation.lock('portrait').catch(() => {});
             }
         }
 
         window.addEventListener('load', () => {
             lockPortraitOrientation();
             startSequence();
+        });
+
+        // Continuous enforcement event listeners to block physical rotation flips
+        window.addEventListener('orientationchange', () => {
+            lockPortraitOrientation();
         });
 
         function startSequence() {
