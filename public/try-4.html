@@ -214,6 +214,31 @@
             cursor: pointer;
             border-radius: 50%;
         }
+
+        /* Seamless unified background layer spanning both pages to remove page break seams */
+        .store-unified-backdrop {
+            position: absolute;
+            width: 100%;
+            height: 200%;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .store-unified-backdrop img {
+            width: 100%;
+            height: 50%;
+            object-fit: fill;
+        }
+
+        .store-page-pane {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -248,14 +273,18 @@
 
         <!-- Store Stack Flow Pages (Coin Pack Page & Tiers Pass Page) -->
         <div class="store-stack-container" id="storeStackContainer">
-            <!-- Store Page 1: Coin Packs (coin_bg.png) -->
+            <!-- Seamless Unified Background Backdrop Layer -->
+            <div class="store-unified-backdrop">
+                <img src="../assets/coin_bg.png" alt="Coin Store Background">
+                <img src="../assets/tiers_bg.png" alt="Tiers Store Background">
+            </div>
+
+            <!-- Store Page 1: Coin Packs -->
             <div class="store-page-pane" id="storePageCoin">
-                <img src="../assets/coin_bg.png" alt="Coin Store Background" class="store-page-bg">
                 <div class="store-close-hitbox" onclick="closeStorePages()"></div>
             </div>
-            <!-- Store Page 2: Tiers Passes (tiers_bg.png) -->
+            <!-- Store Page 2: Tiers Passes -->
             <div class="store-page-pane" id="storePageTiers">
-                <img src="../assets/tiers_bg.png" alt="Tiers Store Background" class="store-page-bg">
                 <div class="store-close-hitbox" onclick="closeStorePages()"></div>
             </div>
         </div>
