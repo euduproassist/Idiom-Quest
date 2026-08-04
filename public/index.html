@@ -211,6 +211,195 @@
             display: none; /* Safari/Chrome */
         }
 
+        /* --- Settings Screen Layer Styles --- */
+        .settings-ui-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        .settings-ui-layer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .settings-header-title {
+            position: absolute;
+            top: 6.5%;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #0b2545;
+            text-align: center;
+        }
+
+        .settings-close-btn {
+            position: absolute;
+            top: 6.8%;
+            right: 6%;
+            width: 38px;
+            height: 38px;
+            border: 2px solid #0b2545;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #0b2545;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .settings-content-area {
+            position: absolute;
+            top: 15%;
+            bottom: 4%;
+            width: 90%;
+            max-width: 460px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .settings-toggles-row {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .setting-toggle-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .setting-circle-btn {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 6px 15px rgba(11, 37, 69, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border: none;
+            transition: transform 0.1s ease;
+        }
+
+        .setting-circle-btn.active-sound {
+            background: #48bb78;
+            color: #ffffff;
+        }
+
+        .setting-circle-btn.inactive-sound {
+            background: #ffffff;
+            color: #1a365d;
+        }
+
+        .setting-circle-btn:active {
+            transform: scale(0.95);
+        }
+
+        .setting-label {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0b2545;
+            letter-spacing: 1px;
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 22px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(11, 37, 69, 0.08);
+            width: 100%;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .settings-card-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .settings-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: transparent;
+            color: #0b2545;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .settings-card-info h3 {
+            font-size: 1.15rem;
+            color: #0b2545;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .settings-card-info p {
+            font-size: 0.9rem;
+            color: #3182ce;
+            font-weight: 700;
+        }
+
+        .settings-card-arrow {
+            font-size: 1.4rem;
+            color: #0b2545;
+            font-weight: 800;
+        }
+
+        .settings-footer-links {
+            position: absolute;
+            bottom: 12px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .settings-footer-links span {
+            cursor: pointer;
+        }
+
+        .settings-build-text {
+            position: absolute;
+            bottom: -10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
         /* --- Section Divider Header Styles --- */
         .section-header-container {
             display: flex;
@@ -768,6 +957,55 @@
                 </div>
             </div>
         </div>
+
+        <!-- Settings Screen Background & UI Overlays -->
+        <img src="../assets/background.png" alt="Settings Background" class="game-canvas" id="screenSettingsBg">
+
+        <div class="settings-ui-layer" id="settingsUi">
+            <div class="settings-header-title">SETTINGS</div>
+            <div class="settings-close-btn" onclick="closeSettings()">✕</div>
+
+            <div class="settings-content-area">
+                <div class="settings-toggles-row">
+                    <div class="setting-toggle-item" onclick="toggleMusic()">
+                        <button class="setting-circle-btn inactive-sound" id="musicBtn">🎵</button>
+                        <div class="setting-label">MUSIC</div>
+                    </div>
+                    <div class="setting-toggle-item" onclick="toggleSound()">
+                        <button class="setting-circle-btn active-sound" id="soundBtn">🔊</button>
+                        <div class="setting-label">SOUND</div>
+                    </div>
+                </div>
+
+                <div class="settings-card" onclick="handleSettingAction('Language')">
+                    <div class="settings-card-left">
+                        <div class="settings-icon-box">🌐</div>
+                        <div class="settings-card-info">
+                            <h3>Language</h3>
+                            <p>English</p>
+                        </div>
+                    </div>
+                    <div class="settings-card-arrow">›</div>
+                </div>
+
+                <div class="settings-card" onclick="handleSettingAction('Help')">
+                    <div class="settings-card-left">
+                        <div class="settings-icon-box">✉️</div>
+                        <div class="settings-card-info">
+                            <h3>Help</h3>
+                        </div>
+                    </div>
+                    <div class="settings-card-arrow">›</div>
+                </div>
+
+                <div class="settings-footer-links">
+                    <span onclick="handleSettingAction('How to play')">How to play</span>
+                    <span onclick="handleSettingAction('Delete Account')">Delete Account</span>
+                    <span onclick="handleSettingAction('Privacy & Data')">Privacy & Data</span>
+                </div>
+                <div class="settings-build-text">Build 5.8.0</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -850,11 +1088,14 @@
         }
 
         let isStoreOpen = false;
+        let isSettingsOpen = false;
 
         function handleMenuAction(actionType) {
             console.log("Menu action triggered:", actionType);
             if (actionType === 'store') {
                 openStore();
+            } else if (actionType === 'settings') {
+                openSettings();
             }
         }
 
@@ -894,6 +1135,74 @@
             }
         }
 
+        function openSettings() {
+            isSettingsOpen = true;
+            const menuBg = document.getElementById('screenMenuBg');
+            const menuUi = document.getElementById('menuUi');
+            const settingsBg = document.getElementById('screenSettingsBg');
+            const settingsUi = document.getElementById('settingsUi');
+
+            menuBg.classList.remove('active');
+            menuUi.classList.remove('active');
+
+            settingsBg.classList.add('active');
+            settingsUi.classList.add('active');
+
+            history.pushState({ page: 'settings' }, '', '');
+        }
+
+        function closeSettings() {
+            if (!isSettingsOpen) return;
+            isSettingsOpen = false;
+
+            const settingsBg = document.getElementById('screenSettingsBg');
+            const settingsUi = document.getElementById('settingsUi');
+            const menuBg = document.getElementById('screenMenuBg');
+            const menuUi = document.getElementById('menuUi');
+
+            settingsBg.classList.remove('active');
+            settingsUi.classList.remove('active');
+
+            menuBg.classList.add('active');
+            menuUi.classList.add('active');
+
+            if (history.state && history.state.page === 'settings') {
+                history.back();
+            }
+        }
+
+        let musicEnabled = false;
+        let soundEnabled = true;
+
+        function toggleMusic() {
+            musicEnabled = !musicEnabled;
+            const btn = document.getElementById('musicBtn');
+            if (musicEnabled) {
+                btn.className = "setting-circle-btn active-sound";
+                btn.innerHTML = "🎵";
+            } else {
+                btn.className = "setting-circle-btn inactive-sound";
+                btn.innerHTML = "🎵";
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundBtn');
+            if (soundEnabled) {
+                btn.className = "setting-circle-btn active-sound";
+                btn.innerHTML = "🔊";
+            } else {
+                btn.className = "setting-circle-btn inactive-sound";
+                btn.innerHTML = "🔇";
+            }
+        }
+
+        function handleSettingAction(actionName) {
+            console.log("Setting action:", actionName);
+            alert(actionName + " clicked.");
+        }
+
         function handleBuy(passName) {
             console.log("Purchase initiated for:", passName);
             alert("Purchasing " + passName + "...");
@@ -909,6 +1218,18 @@
 
                 storeBg.classList.remove('active');
                 storeUi.classList.remove('active');
+
+                menuBg.classList.add('active');
+                menuUi.classList.add('active');
+            } else if (isSettingsOpen) {
+                isSettingsOpen = false;
+                const settingsBg = document.getElementById('screenSettingsBg');
+                const settingsUi = document.getElementById('settingsUi');
+                const menuBg = document.getElementById('screenMenuBg');
+                const menuUi = document.getElementById('menuUi');
+
+                settingsBg.classList.remove('active');
+                settingsUi.classList.remove('active');
 
                 menuBg.classList.add('active');
                 menuUi.classList.add('active');
