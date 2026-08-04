@@ -311,6 +311,56 @@
             object-fit: cover;
         }
 
+        /* --- Calendar Icon Styles (Pure CSS) --- */
+        .calendar-icon {
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border: 2px solid #2b6cb0;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(43, 108, 176, 0.2);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 12px;
+            background: #2b6cb0;
+        }
+
+        .calendar-rings {
+            position: absolute;
+            top: -3px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 8px;
+        }
+
+        .calendar-ring {
+            width: 3px;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 2px;
+            border: 1px solid #1a365d;
+        }
+
+        .calendar-body {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #1a365d;
+            margin-bottom: 3px;
+            letter-spacing: -0.5px;
+        }
+
         .pass-info h3 {
             font-size: 1.05rem;
             color: #0b2545;
@@ -577,7 +627,14 @@
                 <!-- Weekly Pass -->
                 <div class="pass-card">
                     <div class="pass-left">
-                        <div class="pass-icon-box">7</div>
+                        <div class="calendar-icon">
+                            <div class="calendar-header"></div>
+                            <div class="calendar-rings">
+                                <div class="calendar-ring"></div>
+                                <div class="calendar-ring"></div>
+                            </div>
+                            <div class="calendar-body">7</div>
+                        </div>
                         <div class="pass-info">
                             <h3>Weekly Pass</h3>
                             <div class="pass-perks">
@@ -597,7 +654,14 @@
                 <!-- Monthly Pass -->
                 <div class="pass-card">
                     <div class="pass-left">
-                        <div class="pass-icon-box" style="font-size: 0.95rem;">30</div>
+                        <div class="calendar-icon">
+                            <div class="calendar-header"></div>
+                            <div class="calendar-rings">
+                                <div class="calendar-ring"></div>
+                                <div class="calendar-ring"></div>
+                            </div>
+                            <div class="calendar-body" style="font-size: 0.95rem;">30</div>
+                        </div>
                         <div class="pass-info">
                             <h3>Monthly Pass</h3>
                             <div class="pass-perks">
@@ -617,7 +681,14 @@
                 <!-- Yearly Pass -->
                 <div class="pass-card">
                     <div class="pass-left">
-                        <div class="pass-icon-box" style="font-size: 0.85rem;">365</div>
+                        <div class="calendar-icon">
+                            <div class="calendar-header"></div>
+                            <div class="calendar-rings">
+                                <div class="calendar-ring"></div>
+                                <div class="calendar-ring"></div>
+                            </div>
+                            <div class="calendar-body" style="font-size: 0.8rem;">365</div>
+                        </div>
                         <div class="pass-info">
                             <h3>Yearly Pass</h3>
                             <div class="pass-perks">
