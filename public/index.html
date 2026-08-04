@@ -298,6 +298,7 @@
             font-size: 1.8rem;
             border: none;
             transition: transform 0.1s ease;
+            position: relative; /* Added for red slash positioning */
         }
 
         .setting-circle-btn.active-sound {
@@ -312,6 +313,17 @@
 
         .setting-circle-btn:active {
             transform: scale(0.95);
+        }
+
+        /* Red slash style specifically for the 🎵 emoji when muted */
+        .music-slash {
+            position: absolute;
+            width: 3px;
+            height: 52px;
+            background-color: #e53e3e;
+            transform: rotate(45deg);
+            border-radius: 2px;
+            pointer-events: none;
         }
 
         .setting-label {
@@ -958,7 +970,7 @@
             <div class="settings-content-area">
                 <div class="settings-toggles-row">
                     <div class="setting-toggle-item" onclick="toggleMusic()">
-                        <button class="setting-circle-btn inactive-sound" id="musicBtn">🎵</button>
+                        <button class="setting-circle-btn inactive-sound" id="musicBtn">🎵<div class="music-slash" id="musicSlash"></div></button>
                         <div class="setting-label">MUSIC</div>
                     </div>
                     <div class="setting-toggle-item" onclick="toggleSound()">
@@ -1166,12 +1178,18 @@
         function toggleMusic() {
             musicEnabled = !musicEnabled;
             const btn = document.getElementById('musicBtn');
+            const slash = document.getElementById('musicSlash');
             if (musicEnabled) {
                 btn.className = "setting-circle-btn active-sound";
-                btn.innerHTML = "🎵";
+                if (slash) slash.remove();
             } else {
                 btn.className = "setting-circle-btn inactive-sound";
-                btn.innerHTML = "🎵";
+                if (!document.getElementById('musicSlash')) {
+                    const newSlash = document.createElement('div');
+                    newSlash.className = "music-slash";
+                    newSlash.id = "musicSlash";
+                    btn.appendChild(newSlash);
+                }
             }
         }
 
