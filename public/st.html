@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idiom Quest - Level 12</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            /* Fallback background image matching photo 1 */
+            background: url('Idiom-Quest/assets/background-2.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(245, 230, 205, 0.95);
+            border: 4px solid #8b5a2b;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Top Header Bar */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(139, 90, 43, 0.2);
+            border-bottom: 2px solid #8b5a2b;
+        }
+
+        .level-badge {
+            background: #558b2f;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            border: 2px solid #33691e;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .score-container {
+            display: flex;
+            align-items: center;
+            background: #fff8e1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 2px solid #ffa000;
+            font-weight: bold;
+            color: #d84315;
+            font-size: 16px;
+        }
+
+        .score-container span {
+            margin-left: 5px;
+        }
+
+        .settings-btn {
+            background: #ffa000;
+            border: 2px solid #e65100;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .settings-btn::before {
+            content: "⚙️";
+            font-size: 18px;
+        }
+
+        /* Scene / Video Screen */
+        .scene-section {
+            padding: 10px 15px;
+        }
+
+        .section-title {
+            background: #4e342e;
+            color: #fff;
+            text-align: center;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            border: 2px solid #3e2723;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .video-container {
+            width: 100%;
+            height: 230px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #8b5a2b;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Question Section & Answer Slots */
+        .question-section {
+            padding: 0 15px 10px 15px;
+        }
+
+        .slots-container {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            background: #fdf5e6;
+            padding: 12px 8px;
+            border-radius: 12px;
+            border: 2px solid #d7ccc8;
+        }
+
+        .word-group {
+            display: flex;
+            gap: 4px;
+        }
+
+        .slot {
+            width: 32px;
+            height: 38px;
+            background: #fff;
+            border: 2px solid #bcaaa4;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #3e2723;
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .slot.filled {
+            background: #fff9c4;
+            border-color: #fbc02d;
+        }
+
+        /* Letter Keyboard Bank */
+        .keyboard-section {
+            padding: 0 15px 10px 15px;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            background: #fdf5e6;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #d7ccc8;
+        }
+
+        .letter-btn {
+            background: linear-gradient(to bottom, #ffffff, #f5f5f5);
+            border: 2px solid #bcaaa4;
+            border-bottom: 4px solid #8d6e63;
+            border-radius: 8px;
+            height: 42px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #3e2723;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+
+        .letter-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        .letter-btn.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #e0e0e0;
+        }
+
+        /* Action Buttons (Hint & Reveal) */
+        .actions-section {
+            display: flex;
+            gap: 10px;
+            padding: 0 15px 15px 15px;
+        }
+
+        .action-card {
+            flex: 1;
+            background: #fff8e1;
+            border: 2px solid #d7ccc8;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+
+        .action-card:hover {
+            background: #ffecb3;
+        }
+
+        .action-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .action-text h4 {
+            font-size: 13px;
+            color: #3e2723;
+            margin-bottom: 2px;
+        }
+
+        .action-text p {
+            font-size: 11px;
+            color: #d84315;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Win Overlay Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 20px;
+            border: 4px solid #8b5a2b;
+            text-align: center;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h2 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .modal-content p {
+            color: #5d4037;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .next-btn {
+            background: #43a047;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            border: 2px solid #2e7d32;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Top Status Bar -->
+        <div class="header-bar">
+            <div class="level-badge">LEVEL 12</div>
+            <div class="score-container">⭐ <span id="score">250</span></div>
+            <div class="settings-btn" onclick="openSettings()"></div>
+        </div>
+
+        <!-- Video Scene Section -->
+        <div class="scene-section">
+            <div class="section-title">WATCH THE SCENE</div>
+            <div class="video-container">
+                <video autoplay muted loop playsinline>
+                    <source src="Idiom-Quest/assets/break-ice.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <!-- Idiom Question / Answer Slots -->
+        <div class="question-section">
+            <div class="section-title">WHAT IDIOM IS THIS?</div>
+            <div class="slots-container" id="slotsContainer">
+                <!-- Dynamically generated answer slots for BREAK THE ICE -->
+            </div>
+        </div>
+
+        <!-- Letter Choice Bank -->
+        <div class="keyboard-section">
+            <div class="section-title">USE THESE LETTERS TO FORM THE ANSWER</div>
+            <div class="letter-grid" id="letterGrid">
+                <!-- Hardcoded letter bank matching screenshot + answer requirements -->
+            </div>
+        </div>
+
+        <!-- Hints & Reveal Action Cards -->
+        <div class="actions-section">
+            <div class="action-card" onclick="useHint()">
+                <div class="action-icon">💡</div>
+                <div class="action-text">
+                    <h4>HINT</h4>
+                    <p>⭐ 100</p>
+                </div>
+            </div>
+            <div class="action-card" onclick="useReveal()">
+                <div class="action-icon">🔍</div>
+                <div class="action-text">
+                    <h4>REVEAL</h4>
+                    <p>⭐ 150</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win Modal -->
+    <div class="modal" id="winModal">
+        <div class="modal-content">
+            <h2>Awesome! 🎉</h2>
+            <p>You correctly solved: <strong>BREAK THE ICE</strong></p>
+            <button class="next-btn" onclick="location.reload()">Next Level</button>
+        </div>
+    </div>
+
+    <script>
+        // Target Idiom Configuration
+        const targetIdiom = "BREAK THE ICE";
+        const words = targetIdiom.split(" "); // ["BREAK", "THE", "ICE"]
+        
+        // Initial letter pool matching reference photo keys: E, K, I, B, T, C, R, H, A, E, M, S
+        const letterPool = ['E', 'K', 'I', 'B', 'T', 'C', 'R', 'H', 'A', 'E', 'M', 'S'];
+        
+        let userScore = 250;
+        let slotSelections = {}; // maps slotIndex -> { letter, letterGridIndex }
+
+        const slotsContainer = document.getElementById('slotsContainer');
+        const letterGrid = document.getElementById('letterGrid');
+        const scoreDisplay = document.getElementById('score');
+        const winModal = document.getElementById('winModal');
+
+        // Initialize UI Elements
+        function initGame() {
+            renderSlots();
+            renderLetters();
+        }
+
+        function renderSlots() {
+            slotsContainer.innerHTML = '';
+            let globalSlotIndex = 0;
+
+            words.forEach((word, wIdx) => {
+                const wordGroup = document.createElement('div');
+                wordGroup.className = 'word-group';
+                
+                for (let i = 0; i < word.length; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'slot';
+                    slot.dataset.index = globalSlotIndex;
+                    
+                    if (slotSelections[globalSlotIndex]) {
+                        slot.textContent = slotSelections[globalSlotIndex].letter;
+                        slot.classList.add('filled');
+                    }
+
+                    slot.onclick = () => clearSlot(slot.dataset.index);
+                    wordGroup.appendChild(slot);
+                    globalSlotIndex++;
+                }
+                slotsContainer.appendChild(wordGroup);
+            });
+        }
+
+        function renderLetters() {
+            letterGrid.innerHTML = '';
+            letterPool.forEach((letter, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'letter-btn';
+                btn.textContent = letter;
+                btn.dataset.gridIndex = index;
+
+                // Check if this specific letter button is already used
+                const isUsed = Object.values(slotSelections).some(sel => sel.letterGridIndex === index);
+                if (isUsed) {
+                    btn.classList.add('used');
+                }
+
+                btn.onclick = () => selectLetter(letter, index);
+                letterGrid.appendChild(btn);
+            });
+        }
+
+        function selectLetter(letter, gridIndex) {
+            // Find the first empty slot
+            let totalSlots = targetIdiom.replace(/\s/g, '').length;
+            let targetSlotIdx = -1;
+
+            for (let i = 0; i < totalSlots; i++) {
+                if (!slotSelections[i]) {
+                    targetSlotIdx = i;
+                    break;
+                }
+            }
+
+            if (targetSlotIdx !== -1) {
+                slotSelections[targetSlotIdx] = { letter: letter, letterGridIndex: gridIndex };
+                renderSlots();
+                renderLetters();
+                checkCompletion();
+            }
+        }
+
+        function clearSlot(slotIndex) {
+            if (slotSelections[slotIndex]) {
+                delete slotSelections[slotIndex];
+                renderSlots();
+                renderLetters();
+            }
+        }
+
+        function checkCompletion() {
+            let totalSlots = targetIdiom.replace(/\s/g, '').length;
+            if (Object.keys(slotSelections).length === totalSlots) {
+                let currentAnswer = "";
+                let slotIdx = 0;
+                for (let i = 0; i < targetIdiom.length; i++) {
+                    if (targetIdiom[i] === " ") {
+                        currentAnswer += " ";
+                    } else {
+                        currentAnswer += slotSelections[slotIdx]?.letter || "";
+                        slotIdx++;
+                    }
+                }
+
+                if (currentAnswer === targetIdiom) {
+                    setTimeout(() => {
+                        winModal.style.display = 'flex';
+                    }, 300);
+                }
+            }
+        }
+
+        function useHint() {
+            if (userScore >= 100) {
+                userScore -= 100;
+                scoreDisplay.textContent = userScore;
+                alert("Hint: The scene shows two friends working together to shatter a block filled with crystals!");
+            } else {
+                alert("Not enough stars for a hint!");
+            }
+        }
+
+        function useReveal() {
+            if (userScore >= 150) {
+                userScore -= 150;
+                scoreDisplay.textContent = userScore;
+                
+                // Find first unassigned correct letter slot and auto-fill it
+                let unassignedIdx = -1;
+                let cleanTarget = targetIdiom.replace(/\s/g, '');
+                
+                for (let i = 0; i < cleanTarget.length; i++) {
+                    if (!slotSelections[i]) {
+                        unassignedIdx = i;
+                        break;
+                    }
+                }
+
+                if (unassignedIdx !== -1) {
+                    let correctLetter = cleanTarget[unassignedIdx];
+                    // Find an unused grid tile matching this letter
+                    let matchIndex = letterPool.findIndex((l, idx) => l === correctLetter && !Object.values(slotSelections).some(s => s.letterGridIndex === idx));
+                    if (matchIndex !== -1) {
+                        slotSelections[unassignedIdx] = { letter: correctLetter, letterGridIndex: matchIndex };
+                        renderSlots();
+                        renderLetters();
+                        checkCompletion();
+                    }
+                }
+            } else {
+                alert("Not enough stars to reveal a letter!");
+            }
+        }
+
+        function openSettings() {
+            alert("Settings menu options can go here!");
+        }
+
+        // Initialize board on load
+        window.onload = initGame;
+    </script>
+</body>
+</html>
