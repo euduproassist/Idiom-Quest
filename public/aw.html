@@ -1507,46 +1507,52 @@
 
         // Placeholder function ready for level.json integration
         function loadLevelData(levelNumber) {
-            fetch('level.json')
-                .then(response => response.json())
-                .then(data => {
-                    const levelData = data.levels.find(l => l.level === levelNumber) || data.levels[0];
-                    
-                    // Update UI elements from JSON schema safely
-                    document.getElementById('levelBadge').textContent = `LEVEL ${levelData.level}`;
-                    document.getElementById('videoIframe').src = levelData.videoUrl;
+           fetch('level.json')
+           .then(response => response.json())
+           .then(data => {
+            const levelData = data.levels.find(l => l.level === levelNumber) || data.levels[0];
+            
+            // Update UI elements
+            document.getElementById('levelBadge').textContent = `LEVEL ${levelData.level}`;
+            document.getElementById('videoIframe').src = levelData.videoUrl;
 
-                    // Populate Letter Slots dynamically based on structure config
-                    const slotsContainer = document.getElementById('letterSlotsContainer');
-                    slotsContainer.innerHTML = '';
-                    levelData.slotRows.forEach(rowLength => {
-                        const rowDiv = document.createElement('div');
-                        rowDiv.className = 'letter-slots-row';
-                        if (slotsContainer.children.length > 0) {
-                            rowDiv.style.marginTop = '4px';
-                        }
-                        for (let i = 0; i < rowLength; i++) {
-                            const slotDiv = document.createElement('div');
-                            slotDiv.className = 'letter-slot';
-                            rowDiv.appendChild(slotDiv);
-                        }
-                        slotsContainer.appendChild(rowDiv);
-                    });
+            // Populate Letter Slots dynamically
+            const slotsContainer = document.getElementById('letterSlotsContainer');
+            slotsContainer.innerHTML = '';
+            slotsContainer.style.display = 'flex';
+            slotsContainer.style.flexDirection = 'row';
+            slotsContainer.style.flexWrap = 'wrap';
+            slotsContainer.style.justifyContent = 'center';
+            slotsContainer.style.gap = '10px'; // Space between words
 
-                    // Populate Keyboard Tiles dynamically
-                    const keyboardContainer = document.getElementById('keyboardContainer');
-                    keyboardContainer.innerHTML = '';
-                    levelData.keyboardLetters.forEach(letter => {
-                        const keyTile = document.createElement('div');
-                        keyTile.className = 'key-tile';
-                        keyTile.textContent = letter;
-                        keyboardContainer.appendChild(keyTile);
-                    });
-                })
-                .catch(error => {
-                    console.log("level.json not loaded yet, using default template markup setup.");
-                });
-        }
+            levelData.wordLengths.forEach(wordLen => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word-group';
+                wordDiv.style.display = 'flex';
+                wordDiv.style.gap = '4px'; // Space between letters in the word
+                
+                for (let i = 0; i < wordLen; i++) {
+                    const slotDiv = document.createElement('div');
+                    slotDiv.className = 'letter-slot';
+                    wordDiv.appendChild(slotDiv);
+                }
+                slotsContainer.appendChild(wordDiv);
+            });
+
+            // Populate Keyboard Tiles dynamically
+            const keyboardContainer = document.getElementById('keyboardContainer');
+            keyboardContainer.innerHTML = '';
+            levelData.keyboardLetters.forEach(letter => {
+                const keyTile = document.createElement('div');
+                keyTile.className = 'key-tile';
+                keyTile.textContent = letter;
+                keyboardContainer.appendChild(keyTile);
+            });
+        })
+        .catch(error => {
+            console.error("Error loading level.json:", error);
+        });
+}
 
         window.addEventListener('popstate', () => {
             if (isPlayOpen) {
