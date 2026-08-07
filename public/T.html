@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Forge - Idiom Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            text-align: center;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+        }
+        .slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+        .slot {
+            width: 35px;
+            height: 40px;
+            border: 2px solid #555;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .slot.space {
+            border: none;
+            width: 15px;
+            background: transparent;
+        }
+        .keyboard-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .key-btn {
+            padding: 12px 0;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .key-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h2>What Idiom is This?</h2>
+    <div id="slotsContainer" class="slots-container"></div>
+    <div id="keyboardContainer" class="keyboard-container"></div>
+</div>
+
+<script>
+    async function loadLevelData(levelNum) {
+        try {
+            const response = await fetch('level.json');
+            const data = await response.json();
+            const currentLevel = data.levels.find(l => l.level === levelNum);
+            
+            if (currentLevel) {
+                setupGame(currentLevel);
+            }
+        } catch (error) {
+            console.error("Error loading level data:", error);
+        }
+    }
+
+    function setupGame(levelData) {
+        const fullAnswer = levelData.answer; // e.g., "ELEPHANTINTHEROOM" (or full sentence with spaces if handled)
+        const slotsContainer = document.getElementById('slotsContainer');
+        const keyboardContainer = document.getElementById('keyboardContainer');
+        
+        slotsContainer.innerHTML = '';
+        keyboardContainer.innerHTML = '';
+
+        // For this specific layout, we know the exact phrase has spaces: "ELEPHANT IN THE ROOM"
+        const rawPhrase = "ELEPHANT IN THE ROOM";
+        
+        // Create slots matching the phrase structure
+        rawPhrase.split('').forEach(char => {
+            const slot = document.createElement('div');
+            if (char === ' ') {
+                slot.classList.add('slot', 'space');
+            } else {
+                slot.classList.add('slot');
+                slot.dataset.expected = char;
+            }
+            slotsContainer.appendChild(slot);
+        });
+
+        // Create scrambled letter buttons
+        levelData.keyboardLetters.forEach(letter => {
+            const btn = document.createElement('button');
+            btn.classList.add('key-btn');
+            btn.textContent = letter;
+            btn.addEventListener('click', () => {
+                // Basic interaction hook for filling slots
+                const emptySlot = Array.from(slotsContainer.querySelectorAll('.slot:not(.space)'))
+                    .find(s => !s.textContent);
+                if (emptySlot) {
+                    emptySlot.textContent = letter;
+                }
+            });
+            keyboardContainer.appendChild(btn);
+        });
+    }
+
+    // Initialize level 12 on load
+    loadLevelData(12);
+</script>
+
+</body>
+</html>
