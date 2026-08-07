@@ -1,0 +1,15 @@
+{
+  "levels": [
+    {
+      "level": 12,
+      "videoUrl": "https://www.youtube.com/embed/your_video_id_here",
+      "answer": "ELEPHANTINTHEROOM",
+      "slotRows": [10, 9],
+      "keyboardLetters": [
+        "E", "L", "T", "H", "A", "N",
+        "I", "N", "T", "H", "E", "R",
+        "O", "O", "M", "X", "P", "S"
+      ]
+    }
+  ]
+}
