@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Idiom Quest - Test Animation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            position: fixed;
+            touch-action: none;
+        }
+
+        .screen-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+
+        .play-ui-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1vh;
+            padding: 12px;
+            background: #1a202c;
+        }
+
+        .scene-card {
+            background: rgba(245, 235, 215, 0.9);
+            border: 2.5px solid #b45309;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 460px;
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            max-height: 35vh;
+            flex-shrink: 2;
+        }
+
+        .scene-title-bar {
+            background: #78350f;
+            color: #fef3c7;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .video-container {
+            width: 100%;
+            flex-grow: 1;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .question-card {
+            background: rgba(245, 235, 215, 0.9);
+            border: 2.5px solid #b45309;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 460px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .letter-slots-row {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .letter-slot {
+            width: 28px;
+            height: 32px;
+            background: #fff;
+            border: 2px solid #b45309;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #78350f;
+        }
+
+        .keyboard-card {
+            background: rgba(245, 235, 215, 0.9);
+            border: 2.5px solid #b45309;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 460px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+
+        .key-tile {
+            background: #fffbeb;
+            border: 2px solid #d97706;
+            border-radius: 6px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #78350f;
+            cursor: pointer;
+        }
+        .key-tile:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen-container">
+        <div class="play-ui-layer">
+            <!-- Scene / Animation Card -->
+            <div class="scene-card">
+                <div class="scene-title-bar">BREAK THE ICE ANIMATION</div>
+                <div class="video-container">
+                    <canvas id="animationCanvas" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Question / Word Slots Card -->
+            <div class="question-card">
+                <div class="scene-title-bar" style="width: 100%; margin-bottom: 2px;">WHAT IDIOM IS THIS?</div>
+                <div class="letter-slots-row" id="letterSlotsContainer">
+                    <!-- Dynamic slots -->
+                </div>
+            </div>
+
+            <!-- Interactive Keyboard Card -->
+            <div class="keyboard-card" id="keyboardContainer">
+                <!-- Dynamic keys -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Animation Logic for "Breaking the Ice" (Surprised boy + Boy with hammer)
+        function startIceBreakingAnimation() {
+            const canvas = document.getElementById('animationCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let frame = 0;
+
+            function drawScene() {
+                frame++;
+                
+                // Clear canvas background (ice blue environment)
+                ctx.fillStyle = '#e0f2fe';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw Ground / Ice Block Surface
+                ctx.fillStyle = '#bae6fd';
+                ctx.fillRect(0, 140, canvas.width, 60);
+
+                // Draw Center Ice Block
+                ctx.fillStyle = '#7dd3fc';
+                ctx.fillRect(160, 100, 80, 50);
+                ctx.strokeStyle = '#0284c7';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(160, 100, 80, 50);
+
+                // --- Boy 1: Surprised Boy (Left side) ---
+                // Head & Body
+                ctx.fillStyle = '#3b82f6';
+                ctx.fillRect(70, 100, 25, 40); // Body
+                ctx.fillStyle = '#fde68a';
+                ctx.beginPath();
+                ctx.arc(82, 85, 12, 0, Math.PI * 2); // Head
+                ctx.fill();
+
+                // Surprised expression (wide open mouth "O" shape)
+                ctx.fillStyle = '#1e3a8a';
+                ctx.beginPath();
+                ctx.arc(82, 88, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Surprised jumping/bouncing motion calculated with Math.sin
+                let jumpOffset = Math.sin(frame * 0.1) * 4;
+
+                // --- Boy 2: Hammer Boy (Right side, hitting the ice) ---
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(270, 100 + jumpOffset, 25, 40); // Body
+                ctx.fillStyle = '#fde68a';
+                ctx.beginPath();
+                ctx.arc(282, 85 + jumpOffset, 12, 0, Math.PI * 2); // Head
+                ctx.fill();
+
+                // Hammer swinging logic based on frames
+                let swingAngle = Math.sin(frame * 0.15) * 0.5 - 0.5;
+                ctx.save();
+                ctx.translate(295, 110 + jumpOffset);
+                ctx.rotate(swingAngle);
+                // Handle
+                ctx.fillStyle = '#78350f';
+                ctx.fillRect(0, -5, 25, 6);
+                // Hammer Head
+                ctx.fillStyle = '#64748b';
+                ctx.fillRect(20, -12, 12, 20);
+                ctx.restore();
+
+                // Cracks appearing on the ice block dynamically when hammer strikes
+                if (Math.sin(frame * 0.15) > 0.7) {
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(180, 110);
+                    ctx.lineTo(200, 130);
+                    ctx.lineTo(190, 140);
+                    ctx.stroke();
+                }
+
+                requestAnimationFrame(drawScene);
+            }
+
+            drawScene();
+        }
+
+        // 2. Setup Dummy Game Board to test UI interaction
+        function initGameTest() {
+            // Setup word slots for "BREAKTHEICE"
+            const wordLengths = [5, 3, 3];
+            const slotsContainer = document.getElementById('letterSlotsContainer');
+            
+            wordLengths.forEach(len => {
+                const wordGroup = document.createElement('div');
+                wordGroup.style.display = 'flex';
+                wordGroup.style.gap = '3px';
+                wordGroup.style.padding = '2px';
+                wordGroup.style.border = '1.5px dashed rgba(180, 83, 9, 0.4)';
+                wordGroup.style.borderRadius = '6px';
+
+                for (let i = 0; i < len; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'letter-slot';
+                    wordGroup.appendChild(slot);
+                }
+                slotsContainer.appendChild(wordGroup);
+            });
+
+            // Setup keyboard
+            const letters = ['B', 'R', 'E', 'A', 'K', 'T', 'H', 'E', 'I', 'C', 'E', 'X'];
+            const keyboardContainer = document.getElementById('keyboardContainer');
+            
+            letters.forEach(letter => {
+                const key = document.createElement('div');
+                key.className = 'key-tile';
+                key.textContent = letter;
+                key.onclick = () => console.log("Pressed:", letter);
+                keyboardContainer.appendChild(key.link ? '' : key);
+            });
+        }
+
+        window.onload = () => {
+            startIceBreakingAnimation();
+            initGameTest();
+        };
+    </script>
+</body>
+</html>
